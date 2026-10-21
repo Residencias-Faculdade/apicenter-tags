@@ -15,8 +15,11 @@
         [(ngModel)]="bindingDadosTag.description"></textarea>
 
     <label for="Tipo">Tipo</label>
-    <input type="text" id="Tipo" name="Tipo" placeholder="Tipo da Tag"
-        [(ngModel)]="bindingDadosTag.type">
+    <select id="Tipo" name="Tipo" [(ngModel)]="bindingDadosTag.type">
+        <option value="frontend">Frontend</option>
+        <option value="backend">Backend</option>
+        <option value="database">Database</option>
+    </select>
 
 
 

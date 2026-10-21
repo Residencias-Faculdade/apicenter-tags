@@ -15,14 +15,14 @@ export class TagsForm {
     id: "",
     name: "",
     description: "",
-    type: ""
+    type: "frontend"
   });
   //Criei um outro objeto apenas para evitar erros de referência
   bindingDadosTag: Tag = {
     id: "",
     name: "",
     description: "",
-    type: ""
+    type: "frontend"
   };
 
   ngOnInit() {

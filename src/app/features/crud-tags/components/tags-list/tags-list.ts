@@ -1,6 +1,6 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 
-type TipoFiltro = 'todas' | 'frontend' | 'backend' | 'database';
+type TipoFiltro = 'todas' | TipoTag;
 
 @Component({
   selector: 'app-tags-list',

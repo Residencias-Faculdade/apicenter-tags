@@ -15,7 +15,7 @@ export class WebComponent implements OnInit {
     id: "",
     name: "",
     description: "",
-    type: ""
+    type: "frontend"
   };
   repassarModeloExibicao: "CRIAR" | "EDITAR" = "CRIAR";
   repassarDadosTags = signal<Tag[]>([]);

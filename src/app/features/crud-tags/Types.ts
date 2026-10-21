@@ -1,8 +1,10 @@
+type TipoTag = 'frontend' | 'backend' | 'database'
+
 type Tag = {
   id: string,
   name: string,
   description: string,
-  type: string
+  type: TipoTag
 }
 
 type Exibicao = 'EDITAR' | 'CRIAR'

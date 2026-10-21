@@ -1,3 +1,24 @@
+
+/* =========================================
+   CONFIGURAÇÃO GERAL
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #f4f6f8;
+
+    color: #444;
+}
+
+
 /* =========================================
    TÍTULO
 ========================================= */
@@ -10,16 +31,16 @@ h1 {
     padding: 16px 20px;
 
     font-size: 18px;
-    font-weight: normal;
+    font-weight: 500;
 
     color: #444;
 
-    background-color: #f5f5f5;
+    background-color: #f8f8f8;
 
     border: 1px solid #ddd;
     border-bottom: none;
 
-    border-radius: 6px 6px 0 0;
+    border-radius: 7px 7px 0 0;
 }
 
 
@@ -32,16 +53,14 @@ form {
     max-width: calc(100% - 30px);
 
     margin: 0 auto 30px;
-
-    padding: 15px;
+    padding: 20px;
 
     background-color: #fff;
 
     border: 1px solid #ddd;
+    border-radius: 0 0 7px 7px;
 
-    border-radius: 0 0 6px 6px;
-
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -52,15 +71,16 @@ form {
 form label {
     display: inline-block;
 
-    width: 100px;
+    width: 80px;
 
-    margin: 13px 8px 0 10px;
+    margin: 13px 8px 0 0;
 
     font-size: 15px;
+    font-weight: 500;
 
     color: #444;
 
-    text-align: right;
+    text-align: left;
 
     vertical-align: middle;
 }
@@ -73,14 +93,14 @@ form label {
 form input,
 form textarea,
 form select {
-    width: calc(100% - 125px);
+    width: calc(100% - 95px);
 
     height: 40px;
 
     margin-top: 13px;
+    padding: 8px 10px;
 
-    padding: 7px 10px;
-
+    font-family: inherit;
     font-size: 15px;
 
     color: #555;
@@ -88,14 +108,14 @@ form select {
     background-color: #fff;
 
     border: 1px solid #ccc;
-
-    border-radius: 4px;
+    border-radius: 5px;
 
     outline: none;
 
     transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 }
 
 
@@ -110,15 +130,15 @@ form textarea::placeholder {
 
 
 /* =========================================
-   FOCO
+   FOCO DOS CAMPOS
 ========================================= */
 
 form input:focus,
 form textarea:focus,
 form select:focus {
-    border-color: #66afe9;
+    border-color: #337ab7;
 
-    box-shadow: 0 0 4px rgba(102, 175, 233, 0.4);
+    box-shadow: 0 0 0 3px rgba(51, 122, 183, 0.12);
 }
 
 
@@ -131,6 +151,8 @@ form input:disabled {
 
     color: #777;
 
+    border-color: #d5d5d5;
+
     cursor: not-allowed;
 }
 
@@ -140,19 +162,17 @@ form input:disabled {
 ========================================= */
 
 .divAcoes {
-    margin-top: 20px;
-
-    padding-top: 13px;
-
-    border-top: 1px solid #1254a0;
-
     display: flex;
 
     justify-content: flex-end;
-
     align-items: center;
 
     gap: 10px;
+
+    margin-top: 22px;
+    padding-top: 15px;
+
+    border-top: 1px solid #ddd;
 }
 
 
@@ -165,21 +185,35 @@ form input:disabled {
 
     padding: 10px 18px;
 
+    font-family: inherit;
     font-size: 15px;
-
-    font-weight: normal;
+    font-weight: 500;
 
     border: none;
 
-    border-radius: 4px;
+    border-radius: 5px;
 
     cursor: pointer;
 
     transition:
-        background-color 0.2s,
-        transform 0.2s,
-        opacity 0.2s;
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
+
+
+/* =========================================
+   EFEITO GERAL DOS BOTÕES
+========================================= */
+
+.divAcoes button:hover {
+    transform: translateY(-1px);
+}
+
+.divAcoes button:active {
+    transform: translateY(0);
+}
+
 
 /* =========================================
    BOTÃO VOLTAR
@@ -194,7 +228,7 @@ form input:disabled {
 .btnVoltar:hover {
     background-color: #5a6268;
 
-    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 
@@ -211,8 +245,9 @@ form input:disabled {
 .btnCriar:hover {
     background-color: #0056b3;
 
-    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 86, 179, 0.25);
 }
+
 
 /* =========================================
    BOTÃO EDITAR
@@ -227,11 +262,12 @@ form input:disabled {
 .btnEditar:hover {
     background-color: #e0a800;
 
-    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(224, 168, 0, 0.25);
 }
 
+
 /* =========================================
-   LINK DÚVIDAS
+   LINK DE DÚVIDAS
 ========================================= */
 
 a {
@@ -249,8 +285,101 @@ a {
     text-align: right;
 
     text-decoration: none;
+
+    transition: color 0.2s ease;
 }
 
 a:hover {
+    color: #23527c;
+
     text-decoration: underline;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 600px) {
+
+    h1 {
+        margin-top: 20px;
+    }
+
+
+    form {
+        padding: 18px;
+    }
+
+
+    /* Labels passam para cima dos campos */
+
+    form label {
+        display: block;
+
+        width: 100%;
+
+        margin: 12px 0 5px;
+    }
+
+
+    /* Campos ocupam toda a largura */
+
+    form input,
+    form textarea,
+    form select {
+        display: block;
+
+        width: 100%;
+
+        margin-top: 0;
+    }
+
+
+    /* Botões ocupam o espaço disponível */
+
+    .divAcoes {
+        justify-content: stretch;
+    }
+
+
+    .divAcoes button {
+        flex: 1;
+    }
+
+
+    /* Link centralizado */
+
+    a {
+        text-align: center;
+    }
+}
+
+
+/* =========================================
+   TELAS MUITO PEQUENAS
+========================================= */
+
+@media (max-width: 400px) {
+
+    h1 {
+        font-size: 17px;
+
+        padding: 14px 16px;
+    }
+
+
+    form {
+        padding: 15px;
+    }
+
+
+    .divAcoes {
+        flex-direction: column;
+    }
+
+
+    .divAcoes button {
+        width: 100%;
+    }
 }

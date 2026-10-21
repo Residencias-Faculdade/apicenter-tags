@@ -1,0 +1,15 @@
+@if(this.pagina() == "LIST"){
+   <app-tags-list
+   (eventEdicao)="escutarEventoTelaEdicao($event)"
+   (eventTelaNovaTag)="escutarEventoTelaCriacao()"
+   [tagsRecebidas]="repassarDadosTags()"
+   (eventExclusao)="escutarEventoExclusao($event)">
+   </app-tags-list>
+}@else {
+    <app-tags-form
+    [receberDadosEdicao]="repassarDadosEdicao"
+    [receberExibicao]="repassarModeloExibicao"
+    (eventVoltarPagina)="escutarEventoVoltarPagina()"
+    (eventOperacaoRealizada)="escutarEventoOperacao($event)">
+    </app-tags-form>
+}

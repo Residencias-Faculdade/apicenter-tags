@@ -1,0 +1,66 @@
+<h1>TAGS</h1>
+
+
+<div class="filtros">
+    <label for="filtro_tipos">Filtrar pelo tipo</label>
+    <select id="filtro_tipos" name="filtro_tipos" [value]="filtroTipo()"
+        (change)="alterarFiltroTipo($any($event.target).value)">
+        <option value="todas">Todas</option>
+        <option value="frontend">Frontend</option>
+        <option value="backend">Backend</option>
+        <option value="database">Database</option>
+    </select>
+</div>
+
+<table>
+
+    <thead>
+        <tr>
+            <th class="id">ID</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Tipo</th>
+            <th class="acoes">Ações</th>
+        </tr>
+    </thead>
+
+
+
+    <tbody>
+        @for(tag of tagsFiltradas(); track tag.id){
+        <tr (click)="capturarEventos($event, 'SELECIONAR',tag.id)">
+            <td>{{tag.id}}</td>
+            <td>{{tag.name}}</td>
+            <td>{{tag.description}}</td>
+            <td>
+                @if (tag.type == "backend") {
+                <span class="tipo backend">{{tag.type}}</span>
+                }@else if (tag.type == "database") {
+                <span class="tipo banco">{{tag.type}}</span>
+                }@else {
+                <span class="tipo frontend">{{tag.type}}</span>
+                }
+            </td>
+            <td>
+                <button class="editar" (click)="capturarEventos($event, 'EDITAR',tag.id)">
+                    Editar
+                </button>
+                <button class="excluir" (click)="capturarEventos($event, 'EXCLUIR',tag.id)">
+                    Excluir
+                </button>
+            </td>
+        </tr>
+        }@empty {
+        <tr>
+            <td colspan="5" class="semResultados">Nenhuma tag encontrada para o filtro "{{filtroTipo()}}"</td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+<div class="divBtnAdicion">
+    <button class="adicionar" (click)="enviarEventTelaNovaTag()">
+        Adicionar
+    </button>
+</div>

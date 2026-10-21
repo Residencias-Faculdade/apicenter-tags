@@ -1,0 +1,34 @@
+{
+    "tags": [
+        {
+            "id": "001",
+            "name": "Java",
+            "description": "Linguagem de programação",
+            "type": "backend"
+        },
+        {
+            "id": "002",
+            "name": "Angular",
+            "description": "Framework para desenvolvimento web",
+            "type": "frontend"
+        },
+        {
+            "id": "003",
+            "name": "Spring Boot",
+            "description": "Framework para aplicações Java",
+            "type": "backend"
+        },
+        {
+            "id": "004",
+            "name": "React",
+            "description": "Biblioteca para construção de interfaces",
+            "type": "frontend"
+        },
+        {
+            "id": "005",
+            "name": "MySQL",
+            "description": "Sistema de gerenciamento de banco de dados",
+            "type": "database"
+        }
+    ]
+}

@@ -1,0 +1,256 @@
+/* =========================================
+   TÍTULO
+========================================= */
+
+h1 {
+    width: 520px;
+    max-width: calc(100% - 30px);
+
+    margin: 35px auto 0;
+    padding: 16px 20px;
+
+    font-size: 18px;
+    font-weight: normal;
+
+    color: #444;
+
+    background-color: #f5f5f5;
+
+    border: 1px solid #ddd;
+    border-bottom: none;
+
+    border-radius: 6px 6px 0 0;
+}
+
+
+/* =========================================
+   FORMULÁRIO
+========================================= */
+
+form {
+    width: 520px;
+    max-width: calc(100% - 30px);
+
+    margin: 0 auto 30px;
+
+    padding: 15px;
+
+    background-color: #fff;
+
+    border: 1px solid #ddd;
+
+    border-radius: 0 0 6px 6px;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   LABELS
+========================================= */
+
+form label {
+    display: inline-block;
+
+    width: 100px;
+
+    margin: 13px 8px 0 10px;
+
+    font-size: 15px;
+
+    color: #444;
+
+    text-align: right;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================
+   INPUTS, TEXTAREA E SELECT
+========================================= */
+
+form input,
+form textarea,
+form select {
+    width: calc(100% - 125px);
+
+    height: 40px;
+
+    margin-top: 13px;
+
+    padding: 7px 10px;
+
+    font-size: 15px;
+
+    color: #555;
+
+    background-color: #fff;
+
+    border: 1px solid #ccc;
+
+    border-radius: 4px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+form input::placeholder,
+form textarea::placeholder {
+    color: #999;
+}
+
+
+/* =========================================
+   FOCO
+========================================= */
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #66afe9;
+
+    box-shadow: 0 0 4px rgba(102, 175, 233, 0.4);
+}
+
+
+/* =========================================
+   INPUT DESABILITADO
+========================================= */
+
+form input:disabled {
+    background-color: #eeeeee;
+
+    color: #777;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   ÁREA DOS BOTÕES
+========================================= */
+
+.divAcoes {
+    margin-top: 20px;
+
+    padding-top: 13px;
+
+    border-top: 1px solid #1254a0;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* =========================================
+   CONFIGURAÇÃO GERAL DOS BOTÕES
+========================================= */
+
+.divAcoes button {
+    min-width: 95px;
+
+    padding: 10px 18px;
+
+    font-size: 15px;
+
+    font-weight: normal;
+
+    border: none;
+
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s,
+        opacity 0.2s;
+}
+
+/* =========================================
+   BOTÃO VOLTAR
+========================================= */
+
+.btnVoltar {
+    color: #fff;
+
+    background-color: #6c757d;
+}
+
+.btnVoltar:hover {
+    background-color: #5a6268;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   BOTÃO CRIAR
+========================================= */
+
+.btnCriar {
+    color: #fff;
+
+    background-color: #007bff;
+}
+
+.btnCriar:hover {
+    background-color: #0056b3;
+
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   BOTÃO EDITAR
+========================================= */
+
+.btnEditar {
+    color: #111;
+
+    background-color: #ffc107;
+}
+
+.btnEditar:hover {
+    background-color: #e0a800;
+
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   LINK DÚVIDAS
+========================================= */
+
+a {
+    display: block;
+
+    width: 520px;
+    max-width: calc(100% - 30px);
+
+    margin: -15px auto 30px;
+
+    font-size: 15px;
+
+    color: #337ab7;
+
+    text-align: right;
+
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

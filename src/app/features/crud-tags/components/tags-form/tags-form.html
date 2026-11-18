@@ -1,36 +1,36 @@
 <h1>TAGS</h1>
-<form (ngSubmit)="enviarEventOperacaoRealizada(receberExibicao() === 'CRIAR' ? 'CRIAR' : 'EDITAR')">
+<form (ngSubmit)="onSubmeter(exibicao() === 'CRIAR' ? 'CRIAR' : 'EDITAR')">
 
-  @if(receberExibicao() != "CRIAR"){
+  @if(exibicao() !== 'CRIAR'){
   <label for="Id">Id</label>
-  <input type="text" id="Id" name="Id" placeholder="Número do Id" disabled [(ngModel)]="bindingDadosTag.id">
+  <input type="text" id="Id" name="Id" placeholder="Número do Id" disabled [(ngModel)]="tagFormulario.id">
   }
 
   <label for="Nome">Nome</label>
-  <input type="text" id="Nome" name="Nome" placeholder="Nome da Tag" required [(ngModel)]="bindingDadosTag.name">
+  <input type="text" id="Nome" name="Nome" placeholder="Nome da Tag" required [(ngModel)]="tagFormulario.name">
 
   <label for="Descricao">Descrição</label>
   <textarea id="Descricao" name="Descricao" placeholder="Descrição da Tag"
-    [(ngModel)]="bindingDadosTag.description"></textarea>
+    [(ngModel)]="tagFormulario.description"></textarea>
 
   <label for="Tipo">Tipo</label>
-  <select id="Tipo" name="Tipo" [(ngModel)]="bindingDadosTag.type">
+  <select id="Tipo" name="Tipo" [(ngModel)]="tagFormulario.type">
     <option value="frontend">Frontend</option>
     <option value="backend">Backend</option>
     <option value="database">Database</option>
   </select>
 
   <div class="divAcoes">
-    <button type="button" class="btnVoltar" (click)="enviarEventVoltarPagina()">
+    <button type="button" class="btnVoltar" (click)="onVoltar()">
       Voltar
     </button>
 
-    @if(receberExibicao() == "CRIAR"){
-    <button type="button" class="btnCriar" (click)="enviarEventOperacaoRealizada('CRIAR')">
+    @if(exibicao() === 'CRIAR'){
+    <button type="button" class="btnCriar" (click)="onSubmeter('CRIAR')">
       Criar
     </button>
     }@else {
-    <button type="button" class="btnEditar" (click)="enviarEventOperacaoRealizada('EDITAR')">
+    <button type="button" class="btnEditar" (click)="onSubmeter('EDITAR')">
       Editar
     </button>
     }

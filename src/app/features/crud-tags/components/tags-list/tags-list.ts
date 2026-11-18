@@ -10,16 +10,16 @@ type TipoFiltro = 'todas' | TipoTag;
   styleUrl: './tags-list.css',
 })
 export class TagsList {
-  tagsRecebidas = input<Tag[]>([]);
-  eventTelaNovaTag = output();
-  eventEdicao = output<string>();
-  eventExclusao = output<string>();
+  tags = input<Tag[]>([]);
+  criacaoSolicitada = output();
+  edicaoSolicitada = output<string>();
+  exclusaoSolicitada = output<string>();
 
   filtroTipo = signal<TipoFiltro>('todas');
 
   tagsFiltradas = computed(() => {
     const filtro = this.filtroTipo();
-    const tags = this.tagsRecebidas();
+    const tags = this.tags();
 
     if (filtro === 'todas') {
       return tags;
@@ -28,19 +28,19 @@ export class TagsList {
     return tags.filter((tag) => tag.type === filtro);
   });
 
-  alterarFiltroTipo(novoTipo: TipoFiltro): void {
-    this.filtroTipo.set(novoTipo);
+  onFiltroAlterado(tipo: TipoFiltro): void {
+    this.filtroTipo.set(tipo);
   }
 
-  solicitarNovaTag(): void {
-    this.eventTelaNovaTag.emit();
+  onAdicionar(): void {
+    this.criacaoSolicitada.emit();
   }
 
-  solicitarEdicao(idTag: string): void {
-    this.eventEdicao.emit(idTag);
+  onEditar(idTag: string): void {
+    this.edicaoSolicitada.emit(idTag);
   }
 
-  solicitarExclusao(idTag: string): void {
-    this.eventExclusao.emit(idTag);
+  onExcluir(idTag: string): void {
+    this.exclusaoSolicitada.emit(idTag);
   }
 }

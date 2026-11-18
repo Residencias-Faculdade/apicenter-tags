@@ -18,7 +18,7 @@ describe('TagsList', () => {
 
     fixture = TestBed.createComponent(TagsList);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('tagsRecebidas', tags);
+    fixture.componentRef.setInput('tags', tags);
     fixture.detectChanges();
   });
 
@@ -31,23 +31,31 @@ describe('TagsList', () => {
   });
 
   it('deve filtrar as tags pelo tipo', () => {
-    component.alterarFiltroTipo('backend');
+    component.onFiltroAlterado('backend');
     expect(component.tagsFiltradas().map((tag) => tag.name)).toEqual(['Java']);
   });
 
   it('deve emitir o id da tag ao solicitar edição', () => {
     let id = '';
-    component.eventEdicao.subscribe((valor) => (id = valor));
+    component.edicaoSolicitada.subscribe((valor) => (id = valor));
 
-    component.solicitarEdicao('2');
+    component.onEditar('2');
     expect(id).toBe('2');
   });
 
   it('deve emitir o id da tag ao solicitar exclusão sem exibir confirmação', () => {
     let id = '';
-    component.eventExclusao.subscribe((valor) => (id = valor));
+    component.exclusaoSolicitada.subscribe((valor) => (id = valor));
 
-    component.solicitarExclusao('2');
+    component.onExcluir('2');
     expect(id).toBe('2');
+  });
+
+  it('deve emitir evento de criação', () => {
+    let emitiu = false;
+    component.criacaoSolicitada.subscribe(() => (emitiu = true));
+
+    component.onAdicionar();
+    expect(emitiu).toBe(true);
   });
 });

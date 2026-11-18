@@ -3,7 +3,7 @@
 <div class="filtros">
   <label for="filtro_tipos">Filtrar pelo tipo</label>
   <select id="filtro_tipos" name="filtro_tipos" [value]="filtroTipo()"
-    (change)="alterarFiltroTipo($any($event.target).value)">
+    (change)="onFiltroAlterado($any($event.target).value)">
     <option value="todas">Todas</option>
     <option value="frontend">Frontend</option>
     <option value="backend">Backend</option>
@@ -29,17 +29,17 @@
       <td>{{tag.name}}</td>
       <td>{{tag.description}}</td>
       <td>
-        @if (tag.type == "backend") {
+        @if (tag.type === 'backend') {
         <span class="tipo backend">{{tag.type}}</span>
-        }@else if (tag.type == "database") {
+        }@else if (tag.type === 'database') {
         <span class="tipo banco">{{tag.type}}</span>
         }@else {
         <span class="tipo frontend">{{tag.type}}</span>
         }
       </td>
       <td>
-        <button class="editar" (click)="solicitarEdicao(tag.id)">Editar</button>
-        <button class="excluir" (click)="solicitarExclusao(tag.id)">Excluir</button>
+        <button class="editar" (click)="onEditar(tag.id)">Editar</button>
+        <button class="excluir" (click)="onExcluir(tag.id)">Excluir</button>
       </td>
     </tr>
     }@empty {
@@ -51,5 +51,5 @@
 </table>
 
 <div class="divBtnAdicion">
-  <button class="adicionar" (click)="solicitarNovaTag()">Adicionar</button>
+  <button class="adicionar" (click)="onAdicionar()">Adicionar</button>
 </div>

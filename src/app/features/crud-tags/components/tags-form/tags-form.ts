@@ -9,17 +9,17 @@ import { Exibicao, Operacao, Tag } from '../../Types';
   styleUrl: './tags-form.css',
 })
 export class TagsForm {
-  eventVoltarPagina = output();
-  eventOperacaoRealizada = output<Operacao>();
-  receberExibicao = input<Exibicao>('CRIAR');
-  receberDadosEdicao = input<Tag>({
+  voltarSolicitado = output();
+  operacaoRealizada = output<Operacao>();
+  exibicao = input<Exibicao>('CRIAR');
+  tagParaEdicao = input<Tag>({
     id: '',
     name: '',
     description: '',
     type: 'frontend',
   });
 
-  bindingDadosTag: Tag = {
+  tagFormulario: Tag = {
     id: '',
     name: '',
     description: '',
@@ -27,19 +27,19 @@ export class TagsForm {
   };
 
   ngOnInit(): void {
-    if (this.receberExibicao() === 'EDITAR') {
-      this.bindingDadosTag = { ...this.receberDadosEdicao() };
+    if (this.exibicao() === 'EDITAR') {
+      this.tagFormulario = { ...this.tagParaEdicao() };
     }
   }
 
-  enviarEventOperacaoRealizada(tipoOperacao: Exibicao): void {
-    this.eventOperacaoRealizada.emit({
+  onSubmeter(tipoOperacao: Exibicao): void {
+    this.operacaoRealizada.emit({
       tipoOperacao,
-      infoTag: { ...this.bindingDadosTag },
+      infoTag: { ...this.tagFormulario },
     });
   }
 
-  enviarEventVoltarPagina(): void {
-    this.eventVoltarPagina.emit();
+  onVoltar(): void {
+    this.voltarSolicitado.emit();
   }
 }

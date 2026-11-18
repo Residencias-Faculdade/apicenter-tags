@@ -23,15 +23,15 @@ describe('TagsForm', () => {
   it('deve emitir operação de criação com os dados do formulário', () => {
     fixture.detectChanges();
     let operacao: Operacao | undefined;
-    component.eventOperacaoRealizada.subscribe((valor) => (operacao = valor));
+    component.operacaoRealizada.subscribe((valor) => (operacao = valor));
 
-    component.bindingDadosTag = {
+    component.tagFormulario = {
       id: '',
       name: 'Nova tag',
       description: 'Descrição',
       type: 'database',
     };
-    component.enviarEventOperacaoRealizada('CRIAR');
+    component.onSubmeter('CRIAR');
 
     expect(operacao?.tipoOperacao).toBe('CRIAR');
     expect(operacao?.infoTag.name).toBe('Nova tag');
@@ -44,20 +44,20 @@ describe('TagsForm', () => {
       description: 'Framework',
       type: 'frontend',
     };
-    fixture.componentRef.setInput('receberDadosEdicao', original);
-    fixture.componentRef.setInput('receberExibicao', 'EDITAR');
+    fixture.componentRef.setInput('tagParaEdicao', original);
+    fixture.componentRef.setInput('exibicao', 'EDITAR');
     fixture.detectChanges();
 
-    expect(component.bindingDadosTag).toEqual(original);
-    expect(component.bindingDadosTag).not.toBe(original);
+    expect(component.tagFormulario).toEqual(original);
+    expect(component.tagFormulario).not.toBe(original);
   });
 
   it('deve emitir evento para voltar à listagem', () => {
     fixture.detectChanges();
     let voltou = false;
-    component.eventVoltarPagina.subscribe(() => (voltou = true));
+    component.voltarSolicitado.subscribe(() => (voltou = true));
 
-    component.enviarEventVoltarPagina();
+    component.onVoltar();
     expect(voltou).toBe(true);
   });
 });

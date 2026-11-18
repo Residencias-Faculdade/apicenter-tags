@@ -40,43 +40,53 @@ describe('WebComponent', () => {
   });
 
   it('deve carregar as tags vindas da API', () => {
-    expect(component.repassarDadosTags()).toHaveLength(2);
+    expect(component.tags()).toHaveLength(2);
     expect(component.carregando()).toBe(false);
   });
 
   it('deve abrir o formulário para criação e voltar para a lista', () => {
-    component.escutarEventoTelaCriacao();
+    component.onCriacaoSolicitada();
     expect(component.pagina()).toBe('FORM');
+    expect(component.exibicao).toBe('CRIAR');
 
-    component.escutarEventoVoltarPagina();
+    component.onVoltarSolicitado();
     expect(component.pagina()).toBe('LIST');
+  });
+
+  it('deve abrir o formulário com os dados da tag em edição', () => {
+    component.onEdicaoSolicitada('2');
+
+    expect(component.pagina()).toBe('FORM');
+    expect(component.exibicao).toBe('EDITAR');
+    expect(component.tagEmEdicao).toEqual(tags[1]);
+    expect(component.tagEmEdicao).not.toBe(tags[1]);
   });
 
   it('deve criar uma tag e atualizar a lista', () => {
     const nova: Tag = { id: '3', name: 'MySQL', description: 'Banco', type: 'database' };
-    component.criarNovaTag(nova);
+    component.criarTag(nova);
 
     const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('POST');
     req.flush(nova);
-    expect(component.repassarDadosTags()).toHaveLength(3);
+    expect(component.tags()).toHaveLength(3);
   });
 
   it('deve excluir somente após confirmação', () => {
     const confirmar = vi.mocked(window.confirm);
     confirmar.mockReturnValue(false);
-    component.escutarEventoExclusao('1');
+    component.onExclusaoSolicitada('1');
     httpMock.expectNone(`${url}/1`);
-    expect(component.repassarDadosTags()).toHaveLength(2);
+    expect(component.tags()).toHaveLength(2);
 
     confirmar.mockReturnValue(true);
-    component.escutarEventoExclusao('1');
+    component.onExclusaoSolicitada('1');
     httpMock.expectOne(`${url}/1`).flush(tags[0]);
-    expect(component.repassarDadosTags().map((tag) => tag.id)).toEqual(['2']);
+    expect(component.tags().map((tag) => tag.id)).toEqual(['2']);
   });
 
   it('deve exibir mensagem de erro quando a API falhar', () => {
-    component.escutarEventoExclusao('1');
+    component.onExclusaoSolicitada('1');
     httpMock.expectOne(`${url}/1`).flush('falha', { status: 500, statusText: 'Server Error' });
     expect(component.erro()).toContain('Não foi possível excluir');
   });

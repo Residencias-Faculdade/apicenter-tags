@@ -12,11 +12,11 @@ export class TagsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  buscarTodos(): Observable<Tag[]> {
+  listarTags(): Observable<Tag[]> {
     return this.httpClient.get<Tag[]>(this.url);
   }
 
-  criarNovaTag(novaTag: Tag): Observable<Tag> {
+  criarTag(novaTag: Tag): Observable<Tag> {
     const erroValidacao = this.validarNome(novaTag.name);
     if (erroValidacao) {
       return throwError(() => new Error(erroValidacao));

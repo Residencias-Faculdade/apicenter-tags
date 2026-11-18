@@ -24,8 +24,8 @@ describe('TagsService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('deve buscar todas as tags', () => {
-    service.buscarTodos().subscribe((tags) => expect(tags).toEqual([tag]));
+  it('deve listar todas as tags', () => {
+    service.listarTags().subscribe((tags) => expect(tags).toEqual([tag]));
 
     const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
@@ -35,7 +35,7 @@ describe('TagsService', () => {
   it('deve criar tag com id UUID via POST', () => {
     const nova: Tag = { id: '', name: 'Java', description: 'Linguagem', type: 'backend' };
     let criada: Tag | undefined;
-    service.criarNovaTag(nova).subscribe((resposta) => (criada = resposta));
+    service.criarTag(nova).subscribe((resposta) => (criada = resposta));
 
     const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('POST');
@@ -46,7 +46,7 @@ describe('TagsService', () => {
 
   it('deve rejeitar nome inválido sem chamar a API', () => {
     let mensagem = '';
-    service.criarNovaTag({ ...tag, name: 'A' }).subscribe({
+    service.criarTag({ ...tag, name: 'A' }).subscribe({
       error: (erro: Error) => (mensagem = erro.message),
     });
 

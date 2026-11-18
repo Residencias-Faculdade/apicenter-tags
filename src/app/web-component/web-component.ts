@@ -15,88 +15,84 @@ export class WebComponent implements OnInit {
   carregando = signal(false);
   erro = signal<string | null>(null);
 
-  repassarDadosEdicao: Tag = {
+  tagEmEdicao: Tag = {
     id: '',
     name: '',
     description: '',
     type: 'frontend',
   };
-  repassarModeloExibicao: 'CRIAR' | 'EDITAR' = 'CRIAR';
-  repassarDadosTags = signal<Tag[]>([]);
+  exibicao: 'CRIAR' | 'EDITAR' = 'CRIAR';
+  tags = signal<Tag[]>([]);
 
   constructor(private tagsService: TagsService) {}
 
   ngOnInit(): void {
-    this.consumirDadosTags();
+    this.carregarTags();
   }
 
-  criarNovaTag(novaTag: Tag): void {
+  criarTag(tag: Tag): void {
     this.erro.set(null);
-    this.tagsService.criarNovaTag(novaTag).subscribe({
-      next: (tag) => this.repassarDadosTags.update((tags) => [...tags, tag]),
+    this.tagsService.criarTag(tag).subscribe({
+      next: (criada) => this.tags.update((tags) => [...tags, criada]),
       error: (erro: unknown) => this.registrarErro('Não foi possível criar a tag.', erro),
     });
   }
 
-  editarTag(tagEditada: Tag): void {
+  editarTag(tag: Tag): void {
     this.erro.set(null);
-    this.tagsService.editarTag(tagEditada).subscribe({
+    this.tagsService.editarTag(tag).subscribe({
       next: () =>
-        this.repassarDadosTags.update((tags) =>
-          tags.map((tag) => (tag.id === tagEditada.id ? { ...tagEditada } : tag)),
-        ),
+        this.tags.update((tags) => tags.map((atual) => (atual.id === tag.id ? { ...tag } : atual))),
       error: (erro: unknown) => this.registrarErro('Não foi possível editar a tag.', erro),
     });
   }
 
-  escutarEventoTelaEdicao(idTag: string): void {
-    this.repassarModeloExibicao = 'EDITAR';
-    const tag = this.repassarDadosTags().find((tagAtual) => tagAtual.id === idTag);
-    if (tag) {
-      this.repassarDadosEdicao = { ...tag };
-      this.pagina.set('FORM');
-    }
-  }
-
-  escutarEventoTelaCriacao(): void {
-    this.repassarModeloExibicao = 'CRIAR';
+  onCriacaoSolicitada(): void {
+    this.exibicao = 'CRIAR';
     this.pagina.set('FORM');
   }
 
-  escutarEventoVoltarPagina(): void {
+  onEdicaoSolicitada(idTag: string): void {
+    const tag = this.tags().find((atual) => atual.id === idTag);
+    if (!tag) {
+      return;
+    }
+
+    this.exibicao = 'EDITAR';
+    this.tagEmEdicao = { ...tag };
+    this.pagina.set('FORM');
+  }
+
+  onVoltarSolicitado(): void {
     this.pagina.set('LIST');
   }
 
-  escutarEventoOperacao(operacao: Operacao): void {
-    switch (operacao.tipoOperacao) {
-      case 'CRIAR':
-        this.criarNovaTag(operacao.infoTag);
-        break;
-      case 'EDITAR':
-        this.editarTag(operacao.infoTag);
-        break;
+  onOperacaoRealizada(operacao: Operacao): void {
+    if (operacao.tipoOperacao === 'CRIAR') {
+      this.criarTag(operacao.infoTag);
+    } else {
+      this.editarTag(operacao.infoTag);
     }
     this.pagina.set('LIST');
   }
 
-  escutarEventoExclusao(idTag: string): void {
+  onExclusaoSolicitada(idTag: string): void {
     if (!window.confirm('Deseja excluir essa Tag?')) {
       return;
     }
 
     this.erro.set(null);
     this.tagsService.excluirTag(idTag).subscribe({
-      next: () =>
-        this.repassarDadosTags.update((tags) => tags.filter((tag) => tag.id !== idTag)),
+      next: () => this.tags.update((tags) => tags.filter((tag) => tag.id !== idTag)),
       error: (erro: unknown) => this.registrarErro('Não foi possível excluir a tag.', erro),
     });
   }
 
-  private consumirDadosTags(): void {
+  private carregarTags(): void {
     this.carregando.set(true);
     this.erro.set(null);
-    this.tagsService.buscarTodos().subscribe({
-      next: (tags) => this.repassarDadosTags.set(tags),
+    this.tagsService.listarTags().subscribe({
+      next: (tags) => this.tags.set(tags),
       error: (erro: unknown) => this.registrarErro('Não foi possível carregar as tags.', erro),
       complete: () => this.carregando.set(false),
     });

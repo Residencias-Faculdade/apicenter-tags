@@ -84,7 +84,7 @@ O elemento `<mfe-crud-tags>` **não expõe inputs/propriedades/eventos** na clas
 - `customElements.define('mfe-crud-tags', ...)`; `index.html` usa a tag diretamente.
 
 ### Composição (`app/web-component`)
-- `WebComponent` é o **smart component**: `pagina = signal<'LIST'|'FORM'>`, `carregando`, `erro`, `repassarDadosTags = signal<Tag[]>`, `repassarDadosEdicao`, `repassarModeloExibicao`.
+- `WebComponent` é o **smart component**: `pagina = signal<'LIST'|'FORM'>`, `carregando`, `erro`, `tags = signal<Tag[]>`, `tagEmEdicao`, `exibicao`. Handlers seguem o padrão `on...` (`onCriacaoSolicitada`, `onEdicaoSolicitada`, `onExclusaoSolicitada`, `onVoltarSolicitado`, `onOperacaoRealizada`); outputs dos filhos não usam prefixo `event` (`criacaoSolicitada`, `edicaoSolicitada`, `exclusaoSolicitada`, `voltarSolicitado`, `operacaoRealizada`).
 - `ngOnInit` centraliza o `GET` para evitar requisições repetidas; atualiza estado com `update()` imutável.
 - Navegação determinística com `pagina.set('LIST'|'FORM')`; `window.confirm()` da exclusão fica aqui, não na apresentação.
 - Template exibe "Carregando tags..." e um bloco de erro com botão de fechar.
@@ -102,7 +102,7 @@ O elemento `<mfe-crud-tags>` **não expõe inputs/propriedades/eventos** na clas
 ### Qualidade / build
 - TypeScript `strict` + `strictTemplates`; `@angular/build:application` (esbuild).
 - Budgets: 500 kB/1 MB (initial), 8 kB/12 kB (CSS por componente).
-- Vitest via `@angular/build:unit-test`; 21 testes de comportamento.
+- Vitest via `@angular/build:unit-test`; 23 testes de comportamento.
 - Sem lint configurado; Prettier (`printWidth: 100`, `singleQuote: true`).
 
 ---
@@ -121,13 +121,13 @@ Nenhum risco crítico está em aberto. R1 foi corrigido; R2 permanece por opçã
 | R6 — `alterarPagina()` toggle | ✅ Corrigido | `pagina.set()` explícito |
 | R7 — seletores globais em Shadow DOM | ✅ Corrigido | `*` e `body` trocados por `:host` |
 | R8 — budget de CSS | ✅ Corrigido | Ajustado para 8 kB/12 kB; build sem avisos |
-| R9 — testes superficiais | ✅ Corrigido | 21 testes com `HttpTestingController` |
+| R9 — testes superficiais | ✅ Corrigido | 23 testes com `HttpTestingController` |
 | R10 — tipos globais sem `export` | ✅ Corrigido | `export` + imports explícitos |
 | R11 — `@angular/router` não usado | ✅ Corrigido | Dependência removida via `npm uninstall` |
 
 ### Validação executada (2026-11-17 / 18)
 
-- `npm test -- --watch=false` → 4 arquivos, **21 testes, 0 falhas**
+- `npm test -- --watch=false` → 4 arquivos, **23 testes, 0 falhas**
 - `npm run build` → sucesso, sem avisos de budget, bundle inicial 208,40 kB (56,08 kB transferência)
 - `npm audit --omit=dev --audit-level=high` → 0 vulnerabilidades em dependências de produção (avisos restantes são apenas da cadeia de ferramentas de dev)
 - HTTP foi validado **mockado** (`HttpTestingController`). A integração **live** com o `json-server` em Docker não foi executada nesta rodada.
@@ -183,12 +183,13 @@ mfe-tags/
             └── services/tags-service.ts — @Injectable({providedIn:'root'}), HttpClient, URL fixa http://localhost:1080/tags (mantida por decisão explícita), GET/POST/PUT/DELETE, validação de nome retorna Observable de erro via throwError(), ID gerado no cliente com crypto.randomUUID()
 
 Comportamento observado:
-- WebComponent é o container/smart component: mantém pagina = signal<'LIST'|'FORM'>('LIST'), carregando = signal(false), erro = signal<string|null>(null), repassarDadosTags = signal<Tag[]>([]), repassarDadosEdicao, repassarModeloExibicao; centraliza o GET no ngOnInit ("para evitar várias requisições"); atualiza estado com update() imutável; troca de página com pagina.set('LIST'|'FORM') explícito; window.confirm() da exclusão vive no container; exibe estados de carregamento e erro no template.
-- TagsForm e TagsList são presentation components puros: não injetam serviços, recebem input() e emitem output(). TagsForm copia o objeto recebido ({...receberDadosEdicao()}) para evitar mutação por referência. TagsList apenas emite ids para edição/exclusão, sem diálogos nativos.
+- WebComponent é o container/smart component: mantém pagina = signal<'LIST'|'FORM'>('LIST'), carregando = signal(false), erro = signal<string|null>(null), tags = signal<Tag[]>([]), tagEmEdicao, exibicao; centraliza o GET no ngOnInit ("para evitar várias requisições"); atualiza estado com update() imutável; troca de página com pagina.set('LIST'|'FORM') explícito; window.confirm() da exclusão vive no container; exibe estados de carregamento e erro no template.
+- Convenção de nomes adotada no template: métodos handler com prefixo on (onCriacaoSolicitada, onEdicaoSolicitada, onExclusaoSolicitada, onVoltarSolicitado, onOperacaoRealizada) e outputs SEM prefixo event e SEM prefixo on (criacaoSolicitada, edicaoSolicitada, exclusaoSolicitada, voltarSolicitado, operacaoRealizada). Métodos internos usam verbo direto (carregarTags, registrarErro) e o estado não usa prefixo repassar (tags, tagEmEdicao, exibicao). O service expõe listarTags(), criarTag(), editarTag(), excluirTag().
+- TagsForm e TagsList são presentation components puros: não injetam serviços, recebem input() e emitem output(). TagsForm copia o objeto recebido ({...tagParaEdicao()}) para evitar mutação por referência. TagsList apenas emite ids para edição/exclusão, sem diálogos nativos.
 - Navegação LIST/FORM é feita por @if no template do container, sem roteador (a dependência @angular/router foi removida).
 - O elemento <mfe-crud-tags> NÃO expõe inputs/propriedades/eventos públicos: é autocontido, busca seus próprios dados e não notifica o host.
 - Estilos são CSS por componente (ViewEncapsulation padrão), styles.css global vazio; os seletores * e body foram trocados por :host dentro dos componentes.
-- Testes: 21 testes em 4 arquivos, com provideHttpClient()/provideHttpClientTesting(), HttpTestingController e spy de window.confirm; cobrem CRUD, filtro, validação, loading/erro e emissões de output. `npm test -- --watch=false` e `npm run build` passam sem erros.
+- Testes: 23 testes em 4 arquivos, com provideHttpClient()/provideHttpClientTesting(), HttpTestingController e spy de window.confirm; cobrem CRUD, filtro, validação, loading/erro e emissões de output. `npm test -- --watch=false` e `npm run build` passam sem erros.
 
 Histórico de decisões de correção (já aplicadas em código — documente como decisões tomadas, NÃO como problemas em aberto):
 R1 createApplication() não fornecia providers e não havia provideHttpClient() → corrigido no bootstrap e nos testes.
@@ -199,7 +200,7 @@ R5 window.confirm() no presentation component e case 'SELECIONAR' sem implementa
 R6 alterarPagina() era toggle → substituído por pagina.set() explícito.
 R7 seletores globais em CSS dentro de Web Component → trocados por :host.
 R8 CSS acima do budget de 4 kB → budget ajustado para 8 kB (warning) / 12 kB (erro).
-R9 cobertura de testes insuficiente → 21 testes de comportamento.
+R9 cobertura de testes insuficiente → 23 testes de comportamento.
 R10 tipos globais sem export → export + imports explícitos.
 R11 dependência @angular/router não utilizada → removida via npm uninstall.
 

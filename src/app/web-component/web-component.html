@@ -9,13 +9,13 @@
 </div>
 }
 
-@if (pagina() == "LIST") {
-<app-tags-list (eventEdicao)="escutarEventoTelaEdicao($event)"
-  (eventTelaNovaTag)="escutarEventoTelaCriacao()" [tagsRecebidas]="repassarDadosTags()"
-  (eventExclusao)="escutarEventoExclusao($event)">
+@if (pagina() === 'LIST') {
+<app-tags-list (edicaoSolicitada)="onEdicaoSolicitada($event)"
+  (criacaoSolicitada)="onCriacaoSolicitada()" [tags]="tags()"
+  (exclusaoSolicitada)="onExclusaoSolicitada($event)">
 </app-tags-list>
 } @else {
-<app-tags-form [receberDadosEdicao]="repassarDadosEdicao" [receberExibicao]="repassarModeloExibicao"
-  (eventVoltarPagina)="escutarEventoVoltarPagina()" (eventOperacaoRealizada)="escutarEventoOperacao($event)">
+<app-tags-form [tagParaEdicao]="tagEmEdicao" [exibicao]="exibicao"
+  (voltarSolicitado)="onVoltarSolicitado()" (operacaoRealizada)="onOperacaoRealizada($event)">
 </app-tags-form>
 }

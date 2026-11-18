@@ -1,5 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Exibicao, Operacao, Tag } from '../../Types';
 
 @Component({
   selector: 'app-tags-form',
@@ -9,36 +10,36 @@ import { FormsModule } from '@angular/forms';
 })
 export class TagsForm {
   eventVoltarPagina = output();
-  eventOperacaoRealizada = output<Operacao>()
-  receberExibicao = input<Exibicao>("CRIAR"); // Visualização padrão, para caso de bugs
+  eventOperacaoRealizada = output<Operacao>();
+  receberExibicao = input<Exibicao>('CRIAR');
   receberDadosEdicao = input<Tag>({
-    id: "",
-    name: "",
-    description: "",
-    type: "frontend"
+    id: '',
+    name: '',
+    description: '',
+    type: 'frontend',
   });
-  //Criei um outro objeto apenas para evitar erros de referência
+
   bindingDadosTag: Tag = {
-    id: "",
-    name: "",
-    description: "",
-    type: "frontend"
+    id: '',
+    name: '',
+    description: '',
+    type: 'frontend',
   };
 
-  ngOnInit() {
-    if (this.receberExibicao() == "EDITAR") {
-      this.bindingDadosTag = { ...this.receberDadosEdicao() }
+  ngOnInit(): void {
+    if (this.receberExibicao() === 'EDITAR') {
+      this.bindingDadosTag = { ...this.receberDadosEdicao() };
     }
   }
 
-  enviarEventOperacaoRealizada(tipoOperacao: "EDITAR" | "CRIAR") {
+  enviarEventOperacaoRealizada(tipoOperacao: Exibicao): void {
     this.eventOperacaoRealizada.emit({
       tipoOperacao,
-      infoTag: { ...this.bindingDadosTag }
-    })
+      infoTag: { ...this.bindingDadosTag },
+    });
   }
 
-  enviarEventVoltarPagina() {
+  enviarEventVoltarPagina(): void {
     this.eventVoltarPagina.emit();
   }
 }

@@ -1,15 +1,15 @@
-type TipoTag = 'frontend' | 'backend' | 'database'
+export type TipoTag = 'frontend' | 'backend' | 'database';
 
-type Tag = {
-  id: string,
-  name: string,
-  description: string,
-  type: TipoTag
-}
+export type Tag = {
+  id: string;
+  name: string;
+  description: string;
+  type: TipoTag;
+};
 
-type Exibicao = 'EDITAR' | 'CRIAR'
+export type Exibicao = 'EDITAR' | 'CRIAR';
 
-type Operacao = {
-  tipoOperacao: Exibicao,
-  infoTag: Tag
-}
+export type Operacao = {
+  tipoOperacao: Exibicao;
+  infoTag: Tag;
+};

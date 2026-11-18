@@ -1,4 +1,5 @@
 import { Component, computed, input, output, signal } from '@angular/core';
+import { Tag, TipoTag } from '../../Types';
 
 type TipoFiltro = 'todas' | TipoTag;
 
@@ -24,30 +25,22 @@ export class TagsList {
       return tags;
     }
 
-    return tags.filter(tag => tag.type === filtro);
+    return tags.filter((tag) => tag.type === filtro);
   });
 
-  alterarFiltroTipo(novoTipo: TipoFiltro) {
+  alterarFiltroTipo(novoTipo: TipoFiltro): void {
     this.filtroTipo.set(novoTipo);
   }
 
-  enviarEventTelaNovaTag() {
+  solicitarNovaTag(): void {
     this.eventTelaNovaTag.emit();
   }
 
-  capturarEventos(event: MouseEvent, operacao: 'EDITAR' | 'SELECIONAR' | 'EXCLUIR', idTag: string) {
-    event.stopPropagation();
-    switch (operacao) {
-      case 'EDITAR':
-        this.eventEdicao.emit(idTag);
-        break;
-      case 'EXCLUIR':
-        var resposta = window.confirm("Deseja excluir essa Tag?");
-        if (resposta) {
-          this.eventExclusao.emit(idTag);
-        }
-        break;
-    }
+  solicitarEdicao(idTag: string): void {
+    this.eventEdicao.emit(idTag);
+  }
 
+  solicitarExclusao(idTag: string): void {
+    this.eventExclusao.emit(idTag);
   }
 }

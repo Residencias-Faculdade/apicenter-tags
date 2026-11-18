@@ -1,59 +1,47 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { Tag } from '../Types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TagsService {
-  private url = "http://localhost:1080/tags";
+  private readonly url = 'http://localhost:1080/tags';
   private readonly MINIMO_CARACTERES = 1;
-  private quantidadeTags: number = 0;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  buscarTodos() {
-    var tags = this.httpClient.get<Tag[]>(this.url)
-    return tags;
+  buscarTodos(): Observable<Tag[]> {
+    return this.httpClient.get<Tag[]>(this.url);
   }
 
-  criarNovaTag(novaTag: Tag) {
-    var nomeTag: string = novaTag.name;
-
-    if (!this.validarNome(nomeTag)) {
-      alert("Nome inválido, poucos caracteres.");
-      return null;
+  criarNovaTag(novaTag: Tag): Observable<Tag> {
+    const erroValidacao = this.validarNome(novaTag.name);
+    if (erroValidacao) {
+      return throwError(() => new Error(erroValidacao));
     }
 
-    novaTag.id = this.gerarNovoId();
-    return this.httpClient.post(this.url, novaTag);
+    return this.httpClient.post<Tag>(this.url, { ...novaTag, id: crypto.randomUUID() });
   }
 
-  editarTag(tagEditada: Tag) {
-    var nomeTag: string = tagEditada.name;
-
-    if (!this.validarNome(nomeTag)) {
-      alert("Nome inválido, poucos caracteres.");
-      return null;
+  editarTag(tagEditada: Tag): Observable<Tag> {
+    const erroValidacao = this.validarNome(tagEditada.name);
+    if (erroValidacao) {
+      return throwError(() => new Error(erroValidacao));
     }
 
-    return this.httpClient.put<Tag>(this.url + `/${tagEditada.id}`, tagEditada)
+    return this.httpClient.put<Tag>(`${this.url}/${tagEditada.id}`, tagEditada);
   }
 
-  excluirTag(idTag: string) {
-    return this.httpClient.delete<Tag>(this.url + `/${idTag}`)
+  excluirTag(idTag: string): Observable<Tag> {
+    return this.httpClient.delete<Tag>(`${this.url}/${idTag}`);
   }
 
-  private validarNome(nomeTag: string): boolean {
-    var analiseNome = nomeTag.trim();
-    return analiseNome.length > this.MINIMO_CARACTERES;
-  }
-
-  private gerarNovoId(): string {
-    this.quantidadeTags += 1;
-    return this.quantidadeTags.toString();
-  }
-
-  public definirQuantidadeTags(quantidadeTags: number) {
-    this.quantidadeTags = quantidadeTags;
+  private validarNome(nomeTag: string): string | null {
+    if (nomeTag.trim().length <= this.MINIMO_CARACTERES) {
+      return 'Nome inválido: informe ao menos 2 caracteres.';
+    }
+    return null;
   }
 }

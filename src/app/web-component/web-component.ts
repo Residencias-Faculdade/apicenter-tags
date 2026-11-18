@@ -1,4 +1,5 @@
-import { Component, OnInit, output, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { Operacao, Tag } from '../features/crud-tags/Types';
 import { TagsForm } from '../features/crud-tags/components/tags-form/tags-form';
 import { TagsList } from '../features/crud-tags/components/tags-list/tags-list';
 import { TagsService } from '../features/crud-tags/services/tags-service';
@@ -10,65 +11,63 @@ import { TagsService } from '../features/crud-tags/services/tags-service';
   styleUrl: './web-component.css',
 })
 export class WebComponent implements OnInit {
-  pagina = signal<"LIST" | "FORM">("LIST");
+  pagina = signal<'LIST' | 'FORM'>('LIST');
+  carregando = signal(false);
+  erro = signal<string | null>(null);
+
   repassarDadosEdicao: Tag = {
-    id: "",
-    name: "",
-    description: "",
-    type: "frontend"
+    id: '',
+    name: '',
+    description: '',
+    type: 'frontend',
   };
-  repassarModeloExibicao: "CRIAR" | "EDITAR" = "CRIAR";
+  repassarModeloExibicao: 'CRIAR' | 'EDITAR' = 'CRIAR';
   repassarDadosTags = signal<Tag[]>([]);
 
-  constructor(private tagsService: TagsService) { }
+  constructor(private tagsService: TagsService) {}
 
-  ngOnInit() {
-    //No inicio, irei consumir os dados da api e repassar para o component de Listagem
-    //Deixei o component pai responsavel por isso, para evitar varias requisições na API
+  ngOnInit(): void {
     this.consumirDadosTags();
   }
 
-
-  criarNovaTag(novaTag: Tag) {
-    this.tagsService.criarNovaTag(novaTag)
-      ?.subscribe({
-        next: (tag) => {
-          this.repassarDadosTags.update(tags => [...tags, tag as Tag])
-        },
-        error: (erro) => console.log("Erro: ", erro)
-      });
+  criarNovaTag(novaTag: Tag): void {
+    this.erro.set(null);
+    this.tagsService.criarNovaTag(novaTag).subscribe({
+      next: (tag) => this.repassarDadosTags.update((tags) => [...tags, tag]),
+      error: (erro: unknown) => this.registrarErro('Não foi possível criar a tag.', erro),
+    });
   }
 
-  editarTag(tagEditada: Tag) {
-    this.tagsService.editarTag(tagEditada)
-      ?.subscribe({
-        next: () => {
-          this.repassarDadosTags.update(arrayTags =>
-            arrayTags.map(
-              tagAtual => tagAtual.id === tagEditada.id ? tagAtual = { ...tagEditada } : tagAtual
-            ));
-        },
-        error: (erro) => console.log("Erro: ", erro)
-      })
+  editarTag(tagEditada: Tag): void {
+    this.erro.set(null);
+    this.tagsService.editarTag(tagEditada).subscribe({
+      next: () =>
+        this.repassarDadosTags.update((tags) =>
+          tags.map((tag) => (tag.id === tagEditada.id ? { ...tagEditada } : tag)),
+        ),
+      error: (erro: unknown) => this.registrarErro('Não foi possível editar a tag.', erro),
+    });
   }
 
-  escutarEventoTelaEdicao(idTag: string) {
-    this.repassarModeloExibicao = "EDITAR";
-    var dadosTag: Tag = this.repassarDadosTags().find((tagAtual) => tagAtual.id === idTag) as Tag;
-    this.repassarDadosEdicao = { ...dadosTag };
-    this.alterarPagina();
+  escutarEventoTelaEdicao(idTag: string): void {
+    this.repassarModeloExibicao = 'EDITAR';
+    const tag = this.repassarDadosTags().find((tagAtual) => tagAtual.id === idTag);
+    if (tag) {
+      this.repassarDadosEdicao = { ...tag };
+      this.pagina.set('FORM');
+    }
   }
 
-  escutarEventoTelaCriacao() {
-    this.repassarModeloExibicao = "CRIAR";
-    this.alterarPagina();
+  escutarEventoTelaCriacao(): void {
+    this.repassarModeloExibicao = 'CRIAR';
+    this.pagina.set('FORM');
   }
 
-  escutarEventoVoltarPagina() {
-    this.alterarPagina();
+  escutarEventoVoltarPagina(): void {
+    this.pagina.set('LIST');
   }
 
-  escutarEventoOperacao(operacao: Operacao) {
+  escutarEventoOperacao(operacao: Operacao): void {
     switch (operacao.tipoOperacao) {
       case 'CRIAR':
         this.criarNovaTag(operacao.infoTag);
@@ -77,35 +76,34 @@ export class WebComponent implements OnInit {
         this.editarTag(operacao.infoTag);
         break;
     }
-    this.alterarPagina()
+    this.pagina.set('LIST');
   }
 
-  escutarEventoExclusao(idTag: string) {
-    this.tagsService.excluirTag(idTag)
-      .subscribe({
-        next: () => this.repassarDadosTags.update((tags) =>
-          tags.filter((tagAtual) => tagAtual.id !== idTag))
-        ,
-        error: (erro) => console.log("Erro: ", erro)
-      })
-  }
-
-  alterarPagina() {
-    if (this.pagina() == "LIST") {
-      this.pagina.set("FORM");
-    } else {
-      this.pagina.set("LIST");
+  escutarEventoExclusao(idTag: string): void {
+    if (!window.confirm('Deseja excluir essa Tag?')) {
+      return;
     }
+
+    this.erro.set(null);
+    this.tagsService.excluirTag(idTag).subscribe({
+      next: () =>
+        this.repassarDadosTags.update((tags) => tags.filter((tag) => tag.id !== idTag)),
+      error: (erro: unknown) => this.registrarErro('Não foi possível excluir a tag.', erro),
+    });
   }
 
-  private consumirDadosTags() {
-    this.tagsService.buscarTodos()
-      .subscribe({
-        next: (tagsRecebidas) => {
-          this.tagsService.definirQuantidadeTags(tagsRecebidas.length);
-          this.repassarDadosTags.set(tagsRecebidas);
-        },
-        error: (erro) => console.log(erro)
-      })
+  private consumirDadosTags(): void {
+    this.carregando.set(true);
+    this.erro.set(null);
+    this.tagsService.buscarTodos().subscribe({
+      next: (tags) => this.repassarDadosTags.set(tags),
+      error: (erro: unknown) => this.registrarErro('Não foi possível carregar as tags.', erro),
+      complete: () => this.carregando.set(false),
+    });
+  }
+
+  private registrarErro(mensagem: string, erro: unknown): void {
+    const detalhe = erro instanceof Error ? erro.message : 'Erro desconhecido.';
+    this.erro.set(`${mensagem} ${detalhe}`);
   }
 }

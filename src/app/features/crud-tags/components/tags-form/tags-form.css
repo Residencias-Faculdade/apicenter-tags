@@ -3,11 +3,9 @@
    CONFIGURAÇÃO GERAL
 ========================================= */
 
-* {
+:host {
+    display: block;
     box-sizing: border-box;
-}
-
-body {
     margin: 0;
     padding: 0;
 
@@ -16,6 +14,10 @@ body {
     background-color: #f4f6f8;
 
     color: #444;
+}
+
+:host * {
+    box-sizing: border-box;
 }
 
 

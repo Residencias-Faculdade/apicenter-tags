@@ -1,43 +1,40 @@
 <h1>TAGS</h1>
-<form action="/tags/cadastrar" method="post">
+<form (ngSubmit)="enviarEventOperacaoRealizada(receberExibicao() === 'CRIAR' ? 'CRIAR' : 'EDITAR')">
 
-    @if(receberExibicao() != "CRIAR"){
-    <label for="Id">Id</label>
-    <input type="text" id="Id" name="Id" placeholder="Número do Id" disabled [(ngModel)]="bindingDadosTag.id">
+  @if(receberExibicao() != "CRIAR"){
+  <label for="Id">Id</label>
+  <input type="text" id="Id" name="Id" placeholder="Número do Id" disabled [(ngModel)]="bindingDadosTag.id">
+  }
+
+  <label for="Nome">Nome</label>
+  <input type="text" id="Nome" name="Nome" placeholder="Nome da Tag" required [(ngModel)]="bindingDadosTag.name">
+
+  <label for="Descricao">Descrição</label>
+  <textarea id="Descricao" name="Descricao" placeholder="Descrição da Tag"
+    [(ngModel)]="bindingDadosTag.description"></textarea>
+
+  <label for="Tipo">Tipo</label>
+  <select id="Tipo" name="Tipo" [(ngModel)]="bindingDadosTag.type">
+    <option value="frontend">Frontend</option>
+    <option value="backend">Backend</option>
+    <option value="database">Database</option>
+  </select>
+
+  <div class="divAcoes">
+    <button type="button" class="btnVoltar" (click)="enviarEventVoltarPagina()">
+      Voltar
+    </button>
+
+    @if(receberExibicao() == "CRIAR"){
+    <button type="button" class="btnCriar" (click)="enviarEventOperacaoRealizada('CRIAR')">
+      Criar
+    </button>
+    }@else {
+    <button type="button" class="btnEditar" (click)="enviarEventOperacaoRealizada('EDITAR')">
+      Editar
+    </button>
     }
-
-    <label for="Nome">Nome</label>
-    <input type="text" id="Nome" name="Nome" placeholder="Nome da Tag"
-        [(ngModel)]="bindingDadosTag.name">
-
-    <label for="Descricao">Descrição</label>
-    <textarea id="Descricao" name="Descricao" placeholder="Descrição da Tag"
-        [(ngModel)]="bindingDadosTag.description"></textarea>
-
-    <label for="Tipo">Tipo</label>
-    <select id="Tipo" name="Tipo" [(ngModel)]="bindingDadosTag.type">
-        <option value="frontend">Frontend</option>
-        <option value="backend">Backend</option>
-        <option value="database">Database</option>
-    </select>
-
-
-
-    <div class="divAcoes">
-        <button type="button" class="btnVoltar" (click)="enviarEventVoltarPagina()">
-            Voltar
-        </button>
-
-        @if(receberExibicao() == "CRIAR"){
-        <button type="button" class="btnCriar" (click)="enviarEventOperacaoRealizada('CRIAR')">
-            Criar
-        </button>
-        }@else {
-        <button type="button" class="btnEditar" (click)="enviarEventOperacaoRealizada('EDITAR')">
-            Editar
-        </button>
-        }
-    </div>
+  </div>
 
 </form>
-<a href="">DÚVIDAS!</a>
+<a href="#" (click)="$event.preventDefault()">DÚVIDAS!</a>
